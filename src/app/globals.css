@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-display: var(--font-playfair), "Times New Roman", serif;
+  --font-script: var(--font-great-vibes), cursive;
+  --font-sans: var(--font-montserrat), sans-serif;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --emerald-950: #071912;
+  --emerald-900: #0f2c20;
+  --emerald-800: #173b2d;
+  --emerald-700: #1f4a39;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --gold-300: #f4df9b;
+  --gold-400: #e5c365;
+  --gold-500: #cda243;
+  --gold-600: #b3852b;
+  --gold-700: #8c641d;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-serif);
+  background-color: #071912;
+  color: #173b2d;
+}
+
+.font-script {
+  font-family: var(--font-script);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-sans-caps {
+  font-family: var(--font-sans);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Luxury Gold Shimmer & Borders */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #ecd690 0%, #c49942 50%, #f4df9b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.luxury-card-border {
+  border: 1px solid rgba(196, 153, 66, 0.45);
+  box-shadow: 0 10px 30px -10px rgba(15, 44, 32, 0.12),
+    inset 0 0 0 1px rgba(244, 223, 155, 0.25);
+}
+
+.luxury-card-emerald {
+  background: radial-gradient(circle at 50% 0%, #1a4233 0%, #0d271c 100%);
+  border: 1px solid rgba(229, 195, 101, 0.45);
+  box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(244, 223, 155, 0.2);
+}
+
+/* 
+  AUTHENTIC LUXURY TEXTURES:
+  Rich woven linen & antique damask paper textures 
+*/
+.linen-texture-rich {
+  background-color: #f7f0e1;
+  background-image: 
+    repeating-linear-gradient(0deg, rgba(160, 120, 50, 0.04) 0px, rgba(160, 120, 50, 0.04) 1px, transparent 1px, transparent 3px),
+    repeating-linear-gradient(90deg, rgba(160, 120, 50, 0.04) 0px, rgba(160, 120, 50, 0.04) 1px, transparent 1px, transparent 3px),
+    radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.6) 0%, rgba(235, 218, 185, 0.3) 100%);
+  background-blend-mode: multiply, multiply, normal;
+}
+
+.emerald-texture-rich {
+  background-color: #0b241a;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(30, 80, 58, 0.6) 0%, transparent 70%),
+    repeating-linear-gradient(45deg, rgba(205, 162, 67, 0.02) 0px, rgba(205, 162, 67, 0.02) 2px, transparent 2px, transparent 8px),
+    repeating-linear-gradient(-45deg, rgba(205, 162, 67, 0.02) 0px, rgba(205, 162, 67, 0.02) 2px, transparent 2px, transparent 8px);
+}
+
+.parchment-texture {
+  background-color: #f5ebda;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(205, 162, 67, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 90% 80%, rgba(205, 162, 67, 0.06) 0%, transparent 50%),
+    repeating-linear-gradient(0deg, rgba(140, 100, 30, 0.025) 0px, rgba(140, 100, 30, 0.025) 1px, transparent 1px, transparent 4px),
+    repeating-linear-gradient(90deg, rgba(140, 100, 30, 0.025) 0px, rgba(140, 100, 30, 0.025) 1px, transparent 1px, transparent 4px);
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 0.92;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3.2s ease-in-out infinite;
+}
+
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(3deg);
+  }
+}
+
+.animate-float {
+  animation: float-gentle 5s ease-in-out infinite;
 }
