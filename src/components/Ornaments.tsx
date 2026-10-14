@@ -35,26 +35,19 @@ export const CanvaFloralGarland: React.FC<OrnamentProps> = ({ className = "w-48 
     className={className}
     aria-hidden="true"
   >
-    {/* Fine gold horizontal lines */}
     <path d="M10 20H110M210 20H310" stroke="#cda243" strokeWidth="0.8" strokeLinecap="round" />
-    
-    {/* Central Rose / Jasmine Blossom */}
     <g transform="translate(160, 20)">
       <circle cx="0" cy="0" r="4.5" fill="#cda243" />
       <circle cx="0" cy="0" r="2" fill="#fffcf5" />
-      {/* Petals */}
       <path d="M0 -10C2 -6 2 -4 0 0C-2 -4 -2 -6 0 -10Z" fill="#d9b65d" />
       <path d="M0 10C2 6 2 4 0 0C-2 4 -2 6 0 10Z" fill="#d9b65d" />
       <path d="M-10 0C-6 2 -4 2 0 0C-4 -2 -6 -2 -10 0Z" fill="#d9b65d" />
       <path d="M10 0C6 2 4 2 0 0C4 -2 6 -2 10 0Z" fill="#d9b65d" />
-      {/* Diagonal leaf sprays */}
       <path d="M-7 -7C-3 -5 -2 -2 0 0C-2 -2 -5 -3 -7 -7Z" fill="#a47d2b" />
       <path d="M7 7C3 5 2 2 0 0C2 2 5 3 7 7Z" fill="#a47d2b" />
       <path d="M7 -7C3 -5 2 -2 0 0C2 -2 5 -3 7 -7Z" fill="#a47d2b" />
       <path d="M-7 7C-3 5 -2 2 0 0C-2 2 -5 3 -7 7Z" fill="#a47d2b" />
     </g>
-
-    {/* Side Buds & Leaves */}
     <g transform="translate(132, 20)">
       <circle cx="0" cy="0" r="2.5" fill="#cda243" />
       <path d="M-5 -4C-2 -2 0 0 0 0C0 0 -2 2 -5 4" stroke="#cda243" strokeWidth="0.8" fill="none" />
@@ -91,7 +84,6 @@ export const CanvaFloralCorner: React.FC<{
       aria-hidden="true"
     >
       <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        {/* Subtle corner vines */}
         <path
           d="M4 4C35 8 60 25 78 55M4 4C8 35 25 60 55 78"
           stroke="#cda243"
@@ -99,23 +91,85 @@ export const CanvaFloralCorner: React.FC<{
           strokeLinecap="round"
           opacity="0.75"
         />
-        {/* Rose blossom in corner */}
         <g transform="translate(14, 14)">
           <circle cx="0" cy="0" r="5" fill="#ecd690" />
           <circle cx="0" cy="0" r="2.5" fill="#b3852b" />
           <path d="M0 -8C2 -4 0 0 0 0C0 0 -2 -4 0 -8Z" fill="#cda243" />
           <path d="M8 0C4 2 0 0 0 0C0 0 4 -2 8 0Z" fill="#cda243" />
         </g>
-        {/* Jasmine flower bud */}
         <g transform="translate(45, 18)">
           <ellipse cx="0" cy="0" rx="3.5" ry="2" transform="rotate(-30)" fill="#fffdf5" stroke="#cda243" strokeWidth="0.7" />
         </g>
         <g transform="translate(18, 45)">
           <ellipse cx="0" cy="0" rx="3.5" ry="2" transform="rotate(60)" fill="#fffdf5" stroke="#cda243" strokeWidth="0.7" />
         </g>
-        {/* Botanical leaves */}
         <path d="M30 10C35 6 40 8 42 12C38 12 33 11 30 10Z" fill="#2d5e49" opacity="0.65" />
         <path d="M10 30C6 35 8 40 12 42C12 38 11 33 10 30Z" fill="#2d5e49" opacity="0.65" />
+      </svg>
+    </div>
+  );
+};
+
+/** Canva-style Floral Crest Frame Header for Event Cards */
+export const CanvaFloralCrest: React.FC<{
+  title: string;
+  isEmerald?: boolean;
+}> = ({ title, isEmerald = false }) => {
+  return (
+    <div className="flex flex-col items-center justify-center my-3 text-center">
+      {/* Ornate Gold Crown & Flower Crest */}
+      <svg
+        viewBox="0 0 160 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-36 h-8 mb-1.5 opacity-90"
+        aria-hidden="true"
+      >
+        <path
+          d="M20 22C45 22 60 12 80 4C100 12 115 22 140 22"
+          stroke="#cda243"
+          strokeWidth="1.1"
+          strokeLinecap="round"
+        />
+        <circle cx="80" cy="4" r="3" fill="#cda243" />
+        <circle cx="80" cy="14" r="1.5" fill="#e5c365" />
+        <circle cx="65" cy="18" r="1.5" fill="#cda243" />
+        <circle cx="95" cy="18" r="1.5" fill="#cda243" />
+        {/* Jasmine flower in center */}
+        <g transform="translate(80, 24)">
+          <circle cx="0" cy="0" r="3" fill="#ecd690" />
+          <path d="M0 -6C1.5 -3 0 0 0 0C0 0 -1.5 -3 0 -6Z" fill="#cda243" />
+          <path d="M6 0C3 1.5 0 0 0 0C0 0 3 -1.5 6 0Z" fill="#cda243" />
+          <path d="M-6 0C-3 1.5 0 0 0 0C0 0 -3 -1.5 -6 0Z" fill="#cda243" />
+          <path d="M0 6C1.5 3 0 0 0 0C0 0 -1.5 3 0 6Z" fill="#cda243" />
+        </g>
+      </svg>
+
+      {/* Decorative Canva-Style Event Title with Elegant Flourish */}
+      <h3
+        className={`text-3xl sm:text-4xl md:text-5xl font-script tracking-wide leading-tight drop-shadow-sm ${
+          isEmerald ? "text-[#f8efd8]" : "text-[#123929]"
+        }`}
+      >
+        {title}
+      </h3>
+
+      {/* Gold Flourish Underline */}
+      <svg
+        viewBox="0 0 180 20"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-44 h-5 mt-1 opacity-80"
+        aria-hidden="true"
+      >
+        <path
+          d="M10 10H70C75 10 78 7 80 4C82 7 85 10 90 10C95 10 98 7 100 4C102 7 105 10 110 10H170"
+          stroke="#cda243"
+          strokeWidth="0.9"
+          strokeLinecap="round"
+        />
+        <circle cx="90" cy="10" r="2.5" fill="#cda243" />
+        <circle cx="90" cy="10" r="1" fill="#fffdf5" />
       </svg>
     </div>
   );

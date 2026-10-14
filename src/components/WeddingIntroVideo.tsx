@@ -40,12 +40,8 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     const mVideo = mobileVideoRef.current;
 
     // Call .load() explicitly so browser immediately buffers metadata and the first frame
-    if (dVideo) {
-      dVideo.load();
-    }
-    if (mVideo) {
-      mVideo.load();
-    }
+    if (dVideo) dVideo.load();
+    if (mVideo) mVideo.load();
 
     const checkReady = () => {
       const active = isDesktop ? desktopVideoRef.current : mobileVideoRef.current;
@@ -65,7 +61,6 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
 
     checkReady();
 
-    // Safety fallback: allow interaction after a brief delay if network is slow
     const timer = setTimeout(() => {
       setVideoStatus((curr) => (curr === "LOADING" ? "READY" : curr));
     }, 2200);
@@ -97,7 +92,6 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     setVideoStatus("PLAYING");
     activeVideo.muted = isMuted;
 
-    // Do NOT reset currentTime = 0 if it causes black flash; only reset if past beginning
     if (activeVideo.currentTime > 0.5) {
       activeVideo.currentTime = 0;
     }
@@ -132,13 +126,11 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     <section className="relative w-full h-[100svh] min-h-[100svh] bg-[#071912] flex items-center justify-center overflow-hidden select-none">
       {/* 
         AMBIENT BLURRED BACKDROP:
-        Takes the video edges and softly diffuses them to fill 100% of any screen width/height,
-        completely eliminating hard black side cutoffs on ultrawide monitors and laptops!
+        Pure video background with zero poster images so it only shows the real video!
       */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 filter blur-3xl scale-125">
         <video
           src={isDesktop ? "/videos/is_gwr_video_mvp.mp4" : "/videos/wedding-intro.mp4"}
-          poster="/gate.png"
           playsInline
           muted
           loop
@@ -151,14 +143,12 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
 
       {/* 
         MAIN VIDEO CONTAINER:
-        Both videos include poster="/gate.png" and preload="auto" so there is NEVER
-        any black frame or delay before playback starts!
+        No extra gate image or poster on laptop/desktop. Shows the video's actual first frame!
       */}
       <div className="relative z-20 w-full h-full flex items-center justify-center">
         {/* PC / LAPTOP (16:9 Landscape) */}
         <video
           ref={desktopVideoRef}
-          poster="/gate.png"
           playsInline
           webkit-playsinline="true"
           preload="auto"
@@ -173,7 +163,6 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
         {/* MOBILE (9:16 Portrait) */}
         <video
           ref={mobileVideoRef}
-          poster="/gate.png"
           playsInline
           webkit-playsinline="true"
           preload="auto"
@@ -236,14 +225,14 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
         )}
       </AnimatePresence>
 
-      {/* OVERLAY 2: "TAP TO ENTER" Button directly OVER the video */}
+      {/* OVERLAY 2: "TAP TO ENTER" Button directly OVER the actual video starting frame */}
       <AnimatePresence>
         {videoStatus === "READY" && (
           <motion.div
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.3 } }}
-            className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[1px] px-6 text-center"
+            className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/35 backdrop-blur-[1px] px-6 text-center"
           >
             <FloatingPetals count={8} />
 
