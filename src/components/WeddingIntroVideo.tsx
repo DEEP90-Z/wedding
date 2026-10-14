@@ -39,7 +39,6 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     const dVideo = desktopVideoRef.current;
     const mVideo = mobileVideoRef.current;
 
-    // Call .load() explicitly so browser immediately buffers metadata and the first frame
     if (dVideo) dVideo.load();
     if (mVideo) mVideo.load();
 
@@ -125,57 +124,40 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
   return (
     <section className="relative w-full h-[100svh] min-h-[100svh] bg-[#071912] flex items-center justify-center overflow-hidden select-none">
       {/* 
-        AMBIENT BLURRED BACKDROP:
-        Takes the video edges and softly diffuses them to fill 100% of any screen width/height,
-        completely eliminating hard black side cutoffs on ultrawide monitors and laptops!
+        MAIN FULL-SCREEN VIDEO CONTAINER:
+        100% full screen (w-full h-full object-cover) on all devices:
+        - Completely fills entire screen edge-to-edge
+        - No black side bars or gaps
+        - Full immersive cinematic presentation
       */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 filter blur-3xl scale-125">
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center overflow-hidden">
+        {/* PC / LAPTOP (16:9 Landscape Video - 100% Full Screen Cover) */}
         <video
-          src={isDesktop ? "/videos/is_gwr_video_mvp.mp4" : "/videos/wedding-intro.mp4"}
+          ref={desktopVideoRef}
           playsInline
-          muted
-          loop
-          className="w-full h-full object-cover"
-        />
-      </div>
+          webkit-playsinline="true"
+          preload="auto"
+          onEnded={handleEnded}
+          className={`w-full h-full object-cover pointer-events-none ${
+            isDesktop ? "block" : "hidden"
+          }`}
+        >
+          <source src="/videos/is_gwr_video_mvp.mp4" type="video/mp4" />
+        </video>
 
-      {/* Subtle vignette over the ambient backdrop */}
-      <div className="absolute inset-0 bg-radial from-transparent via-[#071912]/40 to-[#071912] pointer-events-none z-10" />
-
-      {/* 
-        MAIN VIDEO CONTAINER:
-        Using 16/9 aspect-ratio container with max-w-[94vw] and max-h-[92svh] on laptops/desktop
-        guarantees that all 4 corners and borders have breathing room and are NEVER cut off
-        by browser chrome, address bars, or edge bezels!
-      */}
-      <div className="relative z-20 w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-6">
-        {/* PC / LAPTOP (16:9 Landscape) */}
-        <div className={`relative w-full h-full flex items-center justify-center ${isDesktop ? "flex" : "hidden"}`}>
-          <video
-            ref={desktopVideoRef}
-            playsInline
-            webkit-playsinline="true"
-            preload="auto"
-            onEnded={handleEnded}
-            className="max-w-[94vw] max-h-[92svh] w-auto h-auto object-contain pointer-events-none shadow-2xl rounded-sm"
-          >
-            <source src="/videos/is_gwr_video_mvp.mp4" type="video/mp4" />
-          </video>
-        </div>
-
-        {/* MOBILE (9:16 Portrait) */}
-        <div className={`relative w-full h-full flex items-center justify-center ${!isDesktop ? "flex" : "hidden"}`}>
-          <video
-            ref={mobileVideoRef}
-            playsInline
-            webkit-playsinline="true"
-            preload="auto"
-            onEnded={handleEnded}
-            className="w-full h-full max-h-[100svh] object-cover sm:object-contain pointer-events-none"
-          >
-            <source src="/videos/wedding-intro.mp4" type="video/mp4" />
-          </video>
-        </div>
+        {/* MOBILE (9:16 Portrait Video - 100% Full Screen Cover) */}
+        <video
+          ref={mobileVideoRef}
+          playsInline
+          webkit-playsinline="true"
+          preload="auto"
+          onEnded={handleEnded}
+          className={`w-full h-full object-cover pointer-events-none ${
+            !isDesktop ? "block" : "hidden"
+          }`}
+        >
+          <source src="/videos/wedding-intro.mp4" type="video/mp4" />
+        </video>
       </div>
 
       {/* Floating sound toggle top right */}
