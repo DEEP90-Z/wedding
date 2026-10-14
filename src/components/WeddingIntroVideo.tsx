@@ -24,7 +24,6 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
   // Device orientation / screen detection
   useEffect(() => {
     const checkDevice = () => {
-      // Landscape or wide screens use the PC/Laptop 16:9 video
       const isLandscape = window.innerWidth > window.innerHeight;
       const isWide = window.innerWidth >= 850;
       setIsDesktop(isLandscape || isWide);
@@ -35,34 +34,54 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     return () => window.removeEventListener("resize", checkDevice);
   }, []);
 
-  // Listen to video loading
+  // Preload and prime videos immediately on mount
   useEffect(() => {
-    const activeVideo = isDesktop ? desktopVideoRef.current : mobileVideoRef.current;
-    if (!activeVideo) return;
+    const dVideo = desktopVideoRef.current;
+    const mVideo = mobileVideoRef.current;
 
-    const handleCanPlay = () => {
-      if (videoStatus === "LOADING") {
-        setVideoStatus("READY");
+    // Call .load() explicitly so browser immediately buffers metadata and the first frame
+    if (dVideo) {
+      dVideo.load();
+    }
+    if (mVideo) {
+      mVideo.load();
+    }
+
+    const checkReady = () => {
+      const active = isDesktop ? desktopVideoRef.current : mobileVideoRef.current;
+      if (active && active.readyState >= 2) {
+        setVideoStatus((curr) => (curr === "LOADING" ? "READY" : curr));
       }
     };
 
-    activeVideo.addEventListener("canplay", handleCanPlay);
-    activeVideo.addEventListener("loadeddata", handleCanPlay);
-
-    if (activeVideo.readyState >= 2 && videoStatus === "LOADING") {
-      setVideoStatus("READY");
+    if (dVideo) {
+      dVideo.addEventListener("canplay", checkReady);
+      dVideo.addEventListener("loadeddata", checkReady);
+    }
+    if (mVideo) {
+      mVideo.addEventListener("canplay", checkReady);
+      mVideo.addEventListener("loadeddata", checkReady);
     }
 
+    checkReady();
+
+    // Safety fallback: allow interaction after a brief delay if network is slow
     const timer = setTimeout(() => {
       setVideoStatus((curr) => (curr === "LOADING" ? "READY" : curr));
-    }, 1800);
+    }, 2200);
 
     return () => {
-      activeVideo.removeEventListener("canplay", handleCanPlay);
-      activeVideo.removeEventListener("loadeddata", handleCanPlay);
+      if (dVideo) {
+        dVideo.removeEventListener("canplay", checkReady);
+        dVideo.removeEventListener("loadeddata", checkReady);
+      }
+      if (mVideo) {
+        mVideo.removeEventListener("canplay", checkReady);
+        mVideo.removeEventListener("loadeddata", checkReady);
+      }
       clearTimeout(timer);
     };
-  }, [isDesktop, videoStatus]);
+  }, [isDesktop]);
 
   // Sync mute state on both videos
   useEffect(() => {
@@ -76,8 +95,12 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     if (!activeVideo) return;
 
     setVideoStatus("PLAYING");
-    activeVideo.currentTime = 0;
     activeVideo.muted = isMuted;
+
+    // Do NOT reset currentTime = 0 if it causes black flash; only reset if past beginning
+    if (activeVideo.currentTime > 0.5) {
+      activeVideo.currentTime = 0;
+    }
 
     const playPromise = activeVideo.play();
     if (playPromise !== undefined) {
@@ -115,6 +138,7 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 filter blur-3xl scale-125">
         <video
           src={isDesktop ? "/videos/is_gwr_video_mvp.mp4" : "/videos/wedding-intro.mp4"}
+          poster="/gate.png"
           playsInline
           muted
           loop
@@ -127,13 +151,14 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
 
       {/* 
         MAIN VIDEO CONTAINER:
-        Using 100% width and 100% height with object-cover on mobile and object-contain
-        with auto-centering on desktop ensures full edge-to-edge presence without clipping!
+        Both videos include poster="/gate.png" and preload="auto" so there is NEVER
+        any black frame or delay before playback starts!
       */}
       <div className="relative z-20 w-full h-full flex items-center justify-center">
         {/* PC / LAPTOP (16:9 Landscape) */}
         <video
           ref={desktopVideoRef}
+          poster="/gate.png"
           playsInline
           webkit-playsinline="true"
           preload="auto"
@@ -148,6 +173,7 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
         {/* MOBILE (9:16 Portrait) */}
         <video
           ref={mobileVideoRef}
+          poster="/gate.png"
           playsInline
           webkit-playsinline="true"
           preload="auto"
