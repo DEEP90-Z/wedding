@@ -126,7 +126,8 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     <section className="relative w-full h-[100svh] min-h-[100svh] bg-[#071912] flex items-center justify-center overflow-hidden select-none">
       {/* 
         AMBIENT BLURRED BACKDROP:
-        Pure video background with zero poster images so it only shows the real video!
+        Takes the video edges and softly diffuses them to fill 100% of any screen width/height,
+        completely eliminating hard black side cutoffs on ultrawide monitors and laptops!
       */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 filter blur-3xl scale-125">
         <video
@@ -143,36 +144,38 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
 
       {/* 
         MAIN VIDEO CONTAINER:
-        No extra gate image or poster on laptop/desktop. Shows the video's actual first frame!
+        Using 16/9 aspect-ratio container with max-w-[94vw] and max-h-[92svh] on laptops/desktop
+        guarantees that all 4 corners and borders have breathing room and are NEVER cut off
+        by browser chrome, address bars, or edge bezels!
       */}
-      <div className="relative z-20 w-full h-full flex items-center justify-center">
+      <div className="relative z-20 w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-6">
         {/* PC / LAPTOP (16:9 Landscape) */}
-        <video
-          ref={desktopVideoRef}
-          playsInline
-          webkit-playsinline="true"
-          preload="auto"
-          onEnded={handleEnded}
-          className={`w-full h-full object-contain pointer-events-none ${
-            isDesktop ? "block" : "hidden"
-          }`}
-        >
-          <source src="/videos/is_gwr_video_mvp.mp4" type="video/mp4" />
-        </video>
+        <div className={`relative w-full h-full flex items-center justify-center ${isDesktop ? "flex" : "hidden"}`}>
+          <video
+            ref={desktopVideoRef}
+            playsInline
+            webkit-playsinline="true"
+            preload="auto"
+            onEnded={handleEnded}
+            className="max-w-[94vw] max-h-[92svh] w-auto h-auto object-contain pointer-events-none shadow-2xl rounded-sm"
+          >
+            <source src="/videos/is_gwr_video_mvp.mp4" type="video/mp4" />
+          </video>
+        </div>
 
         {/* MOBILE (9:16 Portrait) */}
-        <video
-          ref={mobileVideoRef}
-          playsInline
-          webkit-playsinline="true"
-          preload="auto"
-          onEnded={handleEnded}
-          className={`w-full h-full object-cover sm:object-contain pointer-events-none ${
-            !isDesktop ? "block" : "hidden"
-          }`}
-        >
-          <source src="/videos/wedding-intro.mp4" type="video/mp4" />
-        </video>
+        <div className={`relative w-full h-full flex items-center justify-center ${!isDesktop ? "flex" : "hidden"}`}>
+          <video
+            ref={mobileVideoRef}
+            playsInline
+            webkit-playsinline="true"
+            preload="auto"
+            onEnded={handleEnded}
+            className="w-full h-full max-h-[100svh] object-cover sm:object-contain pointer-events-none"
+          >
+            <source src="/videos/wedding-intro.mp4" type="video/mp4" />
+          </video>
+        </div>
       </div>
 
       {/* Floating sound toggle top right */}
