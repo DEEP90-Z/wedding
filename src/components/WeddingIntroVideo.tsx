@@ -1,18 +1,20 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import { Volume2, VolumeX, ChevronDown, Sparkles } from "lucide-react";
+import { ChevronDown, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GoldArchMotif, FloatingPetals } from "./Ornaments";
 
 interface WeddingIntroVideoProps {
   isMuted: boolean;
-  onToggleMute: () => void;
+  onUserStarted: () => void;
+  onVideoEnd?: () => void;
 }
 
 export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
   isMuted,
-  onToggleMute,
+  onUserStarted,
+  onVideoEnd,
 }) => {
   const desktopVideoRef = useRef<HTMLVideoElement>(null);
   const mobileVideoRef = useRef<HTMLVideoElement>(null);
@@ -77,10 +79,10 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     };
   }, [isDesktop]);
 
-  // Sync mute state on both videos
+  // Keep video track muted so the background song plays clearly without dual-audio conflict
   useEffect(() => {
-    if (desktopVideoRef.current) desktopVideoRef.current.muted = isMuted;
-    if (mobileVideoRef.current) mobileVideoRef.current.muted = isMuted;
+    if (desktopVideoRef.current) desktopVideoRef.current.muted = true;
+    if (mobileVideoRef.current) mobileVideoRef.current.muted = true;
   }, [isMuted]);
 
   // Click "TAP TO ENTER"
@@ -89,7 +91,7 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     if (!activeVideo) return;
 
     setVideoStatus("PLAYING");
-    activeVideo.muted = isMuted;
+    activeVideo.muted = true;
 
     if (activeVideo.currentTime > 0.5) {
       activeVideo.currentTime = 0;
@@ -98,11 +100,14 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
     const playPromise = activeVideo.play();
     if (playPromise !== undefined) {
       playPromise.catch((err) => {
-        console.warn("Autoplay muted fallback:", err);
+        console.warn("Autoplay fallback:", err);
         activeVideo.muted = true;
         activeVideo.play().catch(() => {});
       });
     }
+
+    // Signal parent that user tapped to start experience
+    onUserStarted();
   };
 
   // Video ended callback: freeze on final frame cleanly
@@ -112,6 +117,7 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
       activeVideo.pause();
     }
     setVideoStatus("ENDED");
+    if (onVideoEnd) onVideoEnd();
   };
 
   const scrollToCelebrations = () => {
@@ -158,27 +164,6 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
         >
           <source src="/videos/wedding-intro.mp4" type="video/mp4" />
         </video>
-      </div>
-
-      {/* Floating sound toggle top right */}
-      <div className="absolute top-5 right-5 z-40">
-        <button
-          onClick={onToggleMute}
-          aria-label={isMuted ? "Unmute audio" : "Mute audio"}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-[#cda243]/60 text-[#f4df9b] hover:bg-black/80 transition shadow-lg text-xs font-sans-caps"
-        >
-          {isMuted ? (
-            <>
-              <VolumeX className="w-3.5 h-3.5 text-[#e5c365]" />
-              <span className="text-[10px] tracking-wider">SOUND OFF</span>
-            </>
-          ) : (
-            <>
-              <Volume2 className="w-3.5 h-3.5 text-[#e5c365] animate-pulse" />
-              <span className="text-[10px] tracking-wider">SOUND ON</span>
-            </>
-          )}
-        </button>
       </div>
 
       {/* OVERLAY 1: "Your Invitation is Loading..." */}
