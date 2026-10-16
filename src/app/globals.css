@@ -58,6 +58,46 @@ body {
     inset 0 0 0 1px rgba(244, 223, 155, 0.2);
 }
 
+/* Haldi Sunlit Yellow / Turmeric Gold Luxury Card */
+.luxury-card-haldi {
+  background: radial-gradient(circle at 50% 0%, #fff9e6 0%, #fcf0c2 45%, #f6e192 100%);
+  border: 1.5px solid rgba(217, 161, 38, 0.55);
+  box-shadow: 0 14px 35px -10px rgba(184, 134, 11, 0.22),
+    inset 0 0 0 1px rgba(255, 237, 160, 0.6);
+}
+
+/* Mehendi Olive Jade Luxury Card */
+.luxury-card-mehendi {
+  background: radial-gradient(circle at 50% 0%, #f6fbf4 0%, #e8f4e2 50%, #d8ebd0 100%);
+  border: 1.5px solid rgba(76, 133, 85, 0.5);
+  box-shadow: 0 14px 35px -10px rgba(47, 94, 56, 0.2),
+    inset 0 0 0 1px rgba(200, 235, 195, 0.5);
+}
+
+/* Qawwali Midnight Velvet Indigo Luxury Card */
+.luxury-card-qawwali {
+  background: radial-gradient(circle at 50% 0%, #1f1b3e 0%, #13102c 55%, #0a081c 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.55);
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(230, 200, 120, 0.25);
+}
+
+/* Barat Royal Crimson-Gold Luxury Card */
+.luxury-card-barat {
+  background: radial-gradient(circle at 50% 0%, #2f0e13 0%, #1e070b 55%, #140407 100%);
+  border: 1.5px solid rgba(229, 195, 101, 0.55);
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 1px rgba(244, 223, 155, 0.25);
+}
+
+/* Walima Imperial Royal Emerald Luxury Card */
+.luxury-card-walima {
+  background: radial-gradient(circle at 50% 0%, #1a4233 0%, #0e291e 55%, #071912 100%);
+  border: 1.5px solid rgba(229, 195, 101, 0.6);
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.55),
+    inset 0 0 0 1px rgba(244, 223, 155, 0.3);
+}
+
 /* 
   AUTHENTIC LUXURY TEXTURES:
   Rich woven linen & antique damask paper textures 

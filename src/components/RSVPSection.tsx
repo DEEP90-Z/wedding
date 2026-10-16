@@ -75,7 +75,7 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({ data }) => {
                 {contact.name}
               </h4>
 
-              {contact.phone ? (
+              {contact.phone && (
                 <button
                   onClick={() => handleCopyPhone(contact.phone!, idx)}
                   className="mt-2.5 inline-flex items-center gap-1.5 text-xs text-[#8c641d] font-sans hover:underline"
@@ -92,10 +92,6 @@ export const RSVPSection: React.FC<RSVPSectionProps> = ({ data }) => {
                     </>
                   )}
                 </button>
-              ) : (
-                <span className="text-[10px] font-sans-caps tracking-widest text-[#a6823c] mt-2 opacity-85">
-                  HONORED HOST
-                </span>
               )}
             </motion.div>
           ))}
