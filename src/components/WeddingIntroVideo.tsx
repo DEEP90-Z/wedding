@@ -112,12 +112,21 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
 
   // Video ended callback: freeze on final frame cleanly
   const handleEnded = () => {
+    if (videoStatus === "ENDED") return;
     const activeVideo = isDesktop ? desktopVideoRef.current : mobileVideoRef.current;
     if (activeVideo) {
       activeVideo.pause();
     }
     setVideoStatus("ENDED");
     if (onVideoEnd) onVideoEnd();
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoStatus === "ENDED") return;
+    const active = isDesktop ? desktopVideoRef.current : mobileVideoRef.current;
+    if (active && active.duration && active.duration > 0 && active.currentTime >= active.duration - 0.25) {
+      handleEnded();
+    }
   };
 
   const scrollToCelebrations = () => {
@@ -144,6 +153,7 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
           webkit-playsinline="true"
           preload="auto"
           onEnded={handleEnded}
+          onTimeUpdate={handleTimeUpdate}
           className={`w-full h-full object-cover pointer-events-none ${
             isDesktop ? "block" : "hidden"
           }`}
@@ -158,6 +168,7 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
           webkit-playsinline="true"
           preload="auto"
           onEnded={handleEnded}
+          onTimeUpdate={handleTimeUpdate}
           className={`w-full h-full object-cover pointer-events-none ${
             !isDesktop ? "block" : "hidden"
           }`}
@@ -230,22 +241,23 @@ export const WeddingIntroVideo: React.FC<WeddingIntroVideoProps> = ({
         )}
       </AnimatePresence>
 
-      {/* OVERLAY 3: When video ends, show scroll button */}
+      {/* OVERLAY 3: When video ends, show a compact, unobtrusive scroll cue that does not cover the names */}
       {videoStatus === "ENDED" && (
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="absolute bottom-6 inset-x-0 z-30 flex flex-col items-center justify-center pointer-events-auto"
+          transition={{ duration: 0.6 }}
+          className="absolute bottom-2.5 sm:bottom-3.5 inset-x-0 z-30 flex justify-center pointer-events-auto"
         >
           <button
             onClick={scrollToCelebrations}
-            className="flex flex-col items-center gap-1.5 px-6 py-2.5 rounded-full bg-black/65 backdrop-blur-md border border-[#e5c365]/80 text-[#fcf6e8] shadow-2xl hover:bg-black/85 transition-all cursor-pointer group"
+            aria-label="Scroll down to celebrations"
+            className="flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1 rounded-full bg-black/40 hover:bg-black/70 backdrop-blur-md border border-[#e5c365]/40 hover:border-[#e5c365] text-[#fcf6e8] shadow-md transition-all cursor-pointer group active:scale-95"
           >
-            <span className="text-xs font-sans-caps tracking-[0.25em] text-[#ecd690]">
-              SCROLL TO CELEBRATIONS
+            <span className="text-[10px] sm:text-[11px] font-sans-caps tracking-[0.2em] text-[#ecd690]">
+              SCROLL DOWN
             </span>
-            <ChevronDown className="w-4 h-4 text-[#e5c365] animate-bounce" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#e5c365] animate-bounce" />
           </button>
         </motion.div>
       )}

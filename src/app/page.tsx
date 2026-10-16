@@ -10,6 +10,7 @@ import { Volume2, VolumeX } from "lucide-react";
 
 export default function WeddingPage() {
   const [isMuted, setIsMuted] = useState(false);
+  const [canScroll, setCanScroll] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -18,6 +19,44 @@ export default function WeddingPage() {
     }
   }, []);
 
+  // Strict scroll lock: no one can scroll the website until the video finishes
+  useEffect(() => {
+    if (!canScroll) {
+      const preventDefault = (e: TouchEvent | WheelEvent) => {
+        e.preventDefault();
+      };
+
+      const preventKeyScroll = (e: KeyboardEvent) => {
+        const blockedKeys = ["Space", "ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End"];
+        if (blockedKeys.includes(e.code) || blockedKeys.includes(e.key)) {
+          e.preventDefault();
+        }
+      };
+
+      // Lock both documentElement and body
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100svh";
+
+      window.addEventListener("wheel", preventDefault, { passive: false });
+      window.addEventListener("touchmove", preventDefault, { passive: false });
+      window.addEventListener("keydown", preventKeyScroll);
+
+      return () => {
+        document.documentElement.style.overflow = "";
+        document.body.style.overflow = "";
+        document.body.style.height = "";
+        window.removeEventListener("wheel", preventDefault);
+        window.removeEventListener("touchmove", preventDefault);
+        window.removeEventListener("keydown", preventKeyScroll);
+      };
+    } else {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+    }
+  }, [canScroll]);
+
   const handleUserStarted = () => {
     if (audioRef.current && !isMuted) {
       audioRef.current.muted = false;
@@ -25,6 +64,11 @@ export default function WeddingPage() {
         console.warn("Audio autoplay blocked or failed:", err);
       });
     }
+  };
+
+  // Called when video reaches the end: unlock page scrolling without auto-scrolling
+  const handleVideoEnd = () => {
+    setCanScroll(true);
   };
 
   const toggleSound = () => {
@@ -47,7 +91,7 @@ export default function WeddingPage() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[#071912] text-[#173b2d]">
+    <div className={`relative min-h-screen bg-[#071912] text-[#173b2d] ${!canScroll ? "h-screen overflow-hidden" : ""}`}>
       {/* Background Wedding Music Player */}
       <audio
         ref={audioRef}
@@ -96,6 +140,7 @@ export default function WeddingPage() {
         <WeddingIntroVideo
           isMuted={isMuted}
           onUserStarted={handleUserStarted}
+          onVideoEnd={handleVideoEnd}
         />
 
         {/* 2. Celebrations Section with Canva-style floral designs */}
